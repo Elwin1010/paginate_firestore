@@ -102,13 +102,15 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
       bloc: _cubit,
       builder: (context, state) {
         if (state is PaginationInitial) {
-          return _buildWithScrollView(context, widget.initialLoader);
+          return _buildWithScrollView(context, widget.initialLoader, 56);
         } else if (state is PaginationError) {
           return _buildWithScrollView(
               context,
               (widget.onError != null)
                   ? widget.onError!(state.error)
-                  : ErrorDisplay(exception: state.error));
+                  : ErrorDisplay(exception: state.error),
+              56
+          );
         } else {
           final loadedState = state as PaginationLoaded;
           if (widget.onLoaded != null) {
@@ -119,7 +121,7 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
           }
 
           if (loadedState.documentSnapshots.isEmpty) {
-            return _buildWithScrollView(context, widget.onEmpty);
+            return _buildWithScrollView(context, widget.onEmpty, 56);
           }
           return widget.itemBuilderType == PaginateBuilderType.listView
               ? _buildListView(loadedState)
@@ -131,11 +133,11 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
     );
   }
 
-  Widget _buildWithScrollView(BuildContext context, Widget child) {
+  Widget _buildWithScrollView(BuildContext context, Widget child, double height) {
     return SingleChildScrollView(
       child: Container(
         alignment: Alignment.center,
-        height: MediaQuery.of(context).size.height,
+        height: height,
         child: child,
       ),
     );
